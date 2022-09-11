@@ -1,4 +1,4 @@
-//this is the hub of the app where the middleware is stored and directed to use it hello
+//this is the hub of the app where the middleware is stored and directed to use it hell
 
 const express = require("express");
 const app = express();
