@@ -19,6 +19,14 @@ module.exports = {
       console.log(err);
     }
   },
+  getFarm: async (req, res) => {
+    try {
+      const posts = await Post.find({ user: req.user.id });
+      res.render("farm.ejs", { posts: posts, user: req.user });
+    } catch (err) {
+      console.log(err);
+    }
+  },
   getPost: async (req, res) => {
     try {
       const post = await Post.findById(req.params.id);

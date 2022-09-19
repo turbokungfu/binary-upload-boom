@@ -1,0 +1,110 @@
+<%- include('partials/header') -%>
+<div class="container">
+  <div class="row mt-5">
+      <div class="col-6">
+        <p><strong>User Name</strong>: <%= user.userName %></p>
+        <p><strong>Email</strong>: <%= user.email %></p>
+   
+          <div class="mt-5">
+            <!-- MAP -->
+            <div id='myMap' style='width: 400px; height: 400px;'></div>
+            <script type='text/javascript'>
+              function loadMapScenario() {
+                  var searchManager;
+                  var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {});
+                  search(map, 'Paris');
+                  function search(map, query) {
+                      //Create an instance of the search manager and perform the search.
+                      Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
+                          searchManager = new Microsoft.Maps.Search.SearchManager(map);
+                          geocodeQuery(map, query);
+                      });
+                  }
+                  function geocodeQuery(map, query) {
+                      var searchRequest = {
+                          where: query,
+                          callback: function (r) {
+                              if (r && r.results && r.results.length > 0) {
+                                  var pin, pins = [], locs = [], output = 'Results:<br/>';
+                                  for (var i = 0; i < r.results.length; i++) {
+                                      //Create a pushpin for each result.
+                                      pin = new Microsoft.Maps.Pushpin(r.results[i].location, { text: i + '' });
+                                      pins.push(pin);
+                                      locs.push(r.results[i].location);
+                                      output += i + ') ' + r.results[i].name + '<br/>';
+                                  }
+                                  //Add the pins to the map
+                                  map.entities.push(pins);
+                                  //Display list of results
+                                  document.getElementById('printoutPanel').innerHTML = output;
+                                  //Determine a bounding box to best view the results.
+                                  var bounds;
+                                  if (r.results.length == 1) {
+                                      bounds = r.results[0].bestView;
+                                  }
+                                  else {
+                                      //Use the locations from the results to calculate a bounding box.
+                                      bounds = Microsoft.Maps.LocationRect.fromLocations(locs);
+                                  }
+                                  map.setView({ bounds: bounds });
+                              }
+                          },
+                          errorCallback: function (e) {
+                              //If there is an error, alert the user about it.
+                              document.getElementById('printoutPanel').innerHTML = 'No results found.';
+                          }
+                      };
+                      //Make the geocode request.
+                      searchManager.geocode(searchRequest);
+                  }
+                  
+              }
+          </script>
+
+          <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=YourBingMapsKey&callback=loadMapScenario' async defer></script>
+      </body>
+              <script type='text/javascript'>
+
+
+
+              </script>
+       
+
+
+
+            <h2>Add a post</h2>
+            <form action="/post/createPost" enctype="multipart/form-data" method="POST">
+              <div class="mb-3">
+                  <label for="title" class="form-label">Title</label>
+                  <input type="text" class="form-control" id="title" name="title">
+              </div>
+              <div class="mb-3">
+                <label for="caption" class="form-label">Caption</label>
+                <textarea class="form-control" id="caption" name="caption"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="imgUpload" class="form-label">Image</label>
+                <input type="file" class="form-control" id="imageUpload" name="file">
+              </div>
+              <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
+            </form>
+          </div>
+      </div>
+      <div class="col-6">
+        <ul class="row list-unstyled">
+        <% for(var i=0; i<posts.length; i++) {%>
+          <li class="col-6 justify-content-between mt-5">
+            <a href="/post/<%= posts[i]._id%>">
+              <img class="img-fluid" src="<%= posts[i].image%>">
+            </a>
+          </li>
+        <% } %>
+        </ul>
+        <div class="row justify-content-center mt-5">
+          <a class="btn btn-primary" href="/feed">Return to Feed</a>
+        </div>  
+      </div>  
+    </div>
+  </div>
+</div>
+<%- include('partials/footer') -%>
