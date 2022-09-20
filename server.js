@@ -2,6 +2,8 @@
 
 const express = require("express");
 const app = express();
+const path = require('path');
+const cors = require('cors');
 const mongoose = require("mongoose");
 const passport = require("passport");
 const session = require("express-session");
@@ -37,6 +39,19 @@ app.use(express.json());
 
 //Logging
 app.use(logger("dev"));
+
+// Body parser
+app.use(express.json());
+
+
+// Set static folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Enable cors
+app.use(cors());
+
+// Routes
+app.use('/api/v1/farms', require('./routes/farms'));
 
 //Use forms for put / delete
 app.use(methodOverride("_method"));

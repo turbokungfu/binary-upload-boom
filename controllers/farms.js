@@ -1,4 +1,4 @@
-const Store = require('../models/Farm');
+const Farm = require('../models/Farm');
 
 // @desc  Get all farms
 // @route GET /api/v1/farms
@@ -18,8 +18,8 @@ exports.getFarms = async (req, res, next) => {
   }
 };
 
-// @desc  Create a store
-// @route POST /api/v1/stores
+// @desc  Create a farm
+// @route POST /api/v1/farms
 // @access Public
 exports.addFarm = async (req, res, next) => {
   try {
